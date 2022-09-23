@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
 using databasetry.Models;
@@ -44,7 +44,7 @@ namespace databasetry
                     {// switch case
                         case 1:
                             Console.WriteLine("");
-                            //gaji();
+                            crudgaj();
                             break;
                         case 2:
                             Console.WriteLine("");
@@ -65,8 +65,15 @@ namespace databasetry
             Program program = new Program();
 
             //program.GetById(1);
-            Console.WriteLine("========= Data Karyawan ===========");
+            Console.Clear();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                            Selamat datang di data karyawan                       ");
+
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("                                     Data Karyawan                                ");
+            Console.WriteLine("================================================================================================");
             Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
             program.GetAllKaryawan();
             Console.WriteLine();
 
@@ -81,7 +88,9 @@ namespace databasetry
             };
             program.Insertkaryawan(kary);
             Console.WriteLine();
-            Console.WriteLine("========= Data Insert Karyawan ========");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                     Insert Data Karyawan                         ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
             Console.WriteLine();
             program.GetAllKaryawan();
             Console.WriteLine();
@@ -93,21 +102,28 @@ namespace databasetry
                 Golongan = 2,
                 Jabatan = "Staff"
             };
-            program.Updatekaryawan(kary);
+            program.Updatekaryawan(upkar);
 
             Console.WriteLine();
-            Console.WriteLine("========= Data Update Karyawan ========");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                     Update Data Karyawan                         ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
             Console.WriteLine();
             program.GetAllKaryawan();
 
 
             //delete data karyawan
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("                                     Data Karyawan                                ");
+            Console.WriteLine("================================================================================================");
             Console.WriteLine();
-            Console.WriteLine("========= Data Karyawan ========");
-            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
             program.GetAllKaryawan();
             Console.WriteLine();
-            Console.WriteLine("======= Delete Data Karyawan =====");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                Proses Delete Data Karyawan            ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
             karyawan delkar = new karyawan
             {
                 Nama = "Ayu Lestari"
@@ -115,27 +131,89 @@ namespace databasetry
             program.deletekaryawan(delkar);
 
             Console.WriteLine();
-            Console.WriteLine("-------------------------------------");
-            Console.WriteLine("-------- Data Setelah di Delete -----");
-            Console.WriteLine("-------------------------------------");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                               Data Setelah di Delete                ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
             program.GetAllKaryawan();
-
-        
-            ////insert gaji
-            //gaji sal = new gaji();
-            //{ //Golongan, gaji pokok, tunjangan makan, total gaji
-            //    Golongan = 4,
-            //    GajiPokok = "Rp 750.000",
-            //    TunjanganMakan = "Rp 50.000",
-            //    TotalGaji = "Rp 800.000"
-            //};
-            //program.Insertgaji(sal);
-            //Console.WriteLine();
-            //Console.WriteLine("========= Data Insert Gaji ========");
-            //Console.WriteLine();
-            //program.GetAllGaji();
-            //Console.WriteLine();
         }
+
+        static void crudgaj()
+        {
+            gaji sal = new gaji();
+            Console.Clear();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                            Selamat datang di data golongan gaji karyawan                       ");
+
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("                                     Data Golongan Gaji Karyawan                                ");
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            sal.GetAllGaji();
+;           Console.WriteLine();
+
+            //insert gaji
+            gaji insal = new gaji();
+            { //Golongan, gaji pokok, tunjangan makan, total gaji
+                Golongan = 4,
+                GajiPokok = "Rp 750.000",
+                TunjanganMakan = "Rp 50.000",
+                TotalGaji = "Rp 800.000"
+            };
+            sal.Insertgaji(insal);
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                     Insert Data Gaji                      ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
+            sal.GetAllGaji();
+            Console.WriteLine();
+
+            //update data gaji
+            gaji upsal = new gaji();
+            {
+                Golongan = 4,
+                GajiPokok = "Rp 750.000",
+            };
+            sal.Updategaji(upsal);
+
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                     Update Data Gaji                     ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
+            sal.GetAllGaji();
+            Console.WriteLine();
+
+            //delete data karyawan
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine("                                     Data Gaji                            ");
+            Console.WriteLine("================================================================================================");
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            sal.GetAllGaji();
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                                Proses Delete Data Gaji            ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
+            gaji delgaj = new gaji();
+            {
+                Golongan = 1;
+            };
+            sal.deletegaji(delgaj);
+
+            Console.WriteLine();
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine("                               Data Setelah di Delete                ");
+            Console.WriteLine("------------------------------------------------------------------------------------------------");
+            Console.WriteLine();
+            sal.GetAllGaji();
+
+        }
+
+
 
         void GetAllKaryawan()
         {
@@ -426,6 +504,52 @@ namespace databasetry
             }
         }
 
+        void Updategaji(gaji gaji)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
+
+                SqlCommand sqlCommand = sqlConnection.CreateCommand();
+                sqlCommand.Transaction = sqlTransaction;
+
+                try
+                {
+
+                    sqlCommand.Connection = sqlConnection;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText =
+                        "UPDATE gaji SET GajiPokok = @gajipokok WHERE Golongan = @golongan";
+                    SqlParameter sqlParameter1 = new SqlParameter();
+                    sqlParameter1.ParameterName = "@golongan";
+                    sqlParameter1.Value = gaji.Golongan;
+
+                    SqlParameter sqlParameter2 = new SqlParameter();
+                    sqlParameter2.ParameterName = "@gajipokok";
+                    sqlParameter2.Value = gaji.GajiPokok;
+
+                    sqlCommand.Parameters.Add(sqlParameter1);
+                    sqlCommand.Parameters.Add(sqlParameter2);
+
+                    sqlCommand.ExecuteNonQuery();
+                    sqlTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        sqlTransaction.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        Console.WriteLine(exRollback.Message);
+                    }
+                }
+            }
+        }
+
         void deletekaryawan(karyawan karyawan)
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))
@@ -447,13 +571,53 @@ namespace databasetry
                     sqlParameter1.ParameterName = "@nama";
                     sqlParameter1.Value = karyawan.Nama;
 
-                    //SqlParameter sqlParameter2 = new SqlParameter();
-                    //sqlParameter2.ParameterName = "@jabatan";
-                    //sqlParameter2.Value = karyawan.Jabatan;
 
+                    //add param
                     sqlCommand.Parameters.Add(sqlParameter1);
-                    //sqlCommand.Parameters.Add(sqlParameter2);
+                   
 
+                    sqlCommand.ExecuteNonQuery();
+                    sqlTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    try
+                    {
+                        sqlTransaction.Rollback();
+                    }
+                    catch (Exception exRollback)
+                    {
+                        Console.WriteLine(exRollback.Message);
+                    }
+                }
+            }
+        }
+
+        void deletegaji(gaji gaji)
+        {
+            using (SqlConnection sqlConnection = new SqlConnection(connectionString))
+            {
+                sqlConnection.Open();
+                SqlTransaction sqlTransaction = sqlConnection.BeginTransaction();
+
+                SqlCommand sqlCommand = sqlConnection.CreateCommand();
+                sqlCommand.Transaction = sqlTransaction;
+
+                try
+                {
+
+                    sqlCommand.Connection = sqlConnection;
+                    sqlCommand.CommandType = CommandType.Text;
+                    sqlCommand.CommandText =
+                        "DELETE FROM gaji WHERE Golongan = @golongan";
+                    SqlParameter sqlParameter1 = new SqlParameter();
+                    sqlParameter1.ParameterName = "@golongan";
+                    sqlParameter1.Value = gaji.Golongan;
+
+                    //add parameter
+                    sqlCommand.Parameters.Add(sqlParameter1);
+                    
                     sqlCommand.ExecuteNonQuery();
                     sqlTransaction.Commit();
                 }
